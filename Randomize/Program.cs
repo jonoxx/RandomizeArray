@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
@@ -8,7 +9,8 @@ namespace Randomize
     public class Program
     {
         private static int n = 10000;
-        
+        private static Random rand;
+
         /// <summary>
         /// Main entry point to randomize an array of n
         /// </summary>
@@ -22,7 +24,12 @@ namespace Randomize
 
             int[] main = BuildInitialSequence(n);
 
-            RandomizeArray(ref main);
+            rand = new Random();
+
+            if (args.Length > 1 && args[1] == "shufflepile")
+                ShufflePile(ref main);
+            else
+                RandomizeBySort(ref main);
 
             watch.Stop();
 
@@ -30,17 +37,35 @@ namespace Randomize
 
             Console.Read();
         }
+
+        /// <summary>
+        /// Randomize an array by sorting a hashtable with random values (slow, more random)
+        /// </summary>
+        /// <param name="main"></param>
+        private static void RandomizeBySort(ref int[] main)
+        {
+            int n = main.Length;
+
+            var unsorted = new Dictionary<int, int>(n);
+
+            Array.ForEach(main, (m) =>
+            {
+                unsorted.Add(m, rand.Next(1, n));
+            });
+
+            var sorted = unsorted
+                .OrderBy(u => u.Value)
+                .ToDictionary(d => d.Key, d => d.Value);
+
+            main = sorted.Keys.ToArray();
+        }
         
         /// <summary>
-        /// Randomize values in an array
+        /// Shuffle array values from a depleting base reference (fast, less random)
         /// </summary>
         /// <param name="main">Main array to work with</param>
-        private static void RandomizeArray(ref int[] main)
+        private static void ShufflePile(ref int[] main)
         {
-            // Random is not thread safe or consistent, but we can afford
-            // to have repeated values as they will be overlooked
-            Random rand = new Random();
-
             // copy the main values into a generic pile to pick random values from
             var pile = new List<int>(main);
 
@@ -83,14 +108,16 @@ namespace Randomize
         /// <param name="took">Time taken to execute</param>
         private static void PrintOutput(int[] main, TimeSpan took)
         {
-            StringBuilder sb = new StringBuilder(n);
+            //StringBuilder sb = new StringBuilder(n);
 
-            Array.ForEach(main, (m) =>
-            {
-                sb.AppendLine(m.ToString());
-            });
+            String result = String.Join(",", main);
 
-            Console.WriteLine(sb.ToString());
+            //Array.ForEach(main, (m) =>
+            //{
+            //    sb.AppendLine(m.ToString());
+            //});
+
+            Console.WriteLine(result);
 
             Console.WriteLine("Calculation time: {0}s {1}ms", took.Seconds, took.Milliseconds);
         }
