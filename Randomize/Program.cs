@@ -27,10 +27,17 @@ namespace Randomize
 
             rand = new Random();
 
-            if (args.Length > 1 && args[1] == "shufflepile")
-                ShufflePile(ref main);
-            else
-                RandomizeBySort(ref main);
+            switch (method)
+            {
+                case "shufflepile":
+                    ShufflePile(ref main);
+                    break;
+                case "randomizebysort":
+                    RandomizeBySort(ref main);
+                    break;
+                default:
+                    break;
+            }
 
             watch.Stop();
 
