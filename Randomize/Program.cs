@@ -19,7 +19,9 @@ namespace Randomize
         static void Main(String[] args)
         {
             if (!ValidateInputs(args))
-                return;
+            {
+                Console.Read();
+            }
 
             Stopwatch watch = Stopwatch.StartNew();
 
