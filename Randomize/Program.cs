@@ -181,7 +181,7 @@ namespace Randomize
 
             if (args.Length > 1)
             {
-                if (args[1] != method || args[1] != "shufflepile")
+                if (args[1] != method && args[1] != "shufflepile")
                 {
                     errors.AppendLine("Invalid method name");
                 }
