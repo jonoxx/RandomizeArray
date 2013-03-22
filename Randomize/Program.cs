@@ -119,7 +119,7 @@ namespace Randomize
         {
             String result = String.Join(",", main);
 
-            //Console.WriteLine(result);
+            Console.WriteLine(result);
 
             Console.WriteLine("Calculation time: {0}s {1}ms", took.Seconds, took.Milliseconds);
         }
