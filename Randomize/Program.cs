@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,9 @@ namespace Randomize
 {
     public class Program
     {
-        private static int n = 10000;
-        private static Random rand;
+        static int n = 10000;
+        static string method = "randomizebysort";
+        static Random rand;
 
         /// <summary>
         /// Main entry point to randomize an array of n
@@ -17,8 +18,8 @@ namespace Randomize
         /// <param name="args">n</param>
         static void Main(String[] args)
         {
-            if (args.Length > 0)
-                n = Convert.ToInt32(args[0]);
+            if (!ValidateInputs(args))
+                return;
 
             Stopwatch watch = Stopwatch.StartNew();
 
@@ -59,7 +60,7 @@ namespace Randomize
 
             main = sorted.Keys.ToArray();
         }
-        
+
         /// <summary>
         /// Shuffle array values from a depleting base reference (fast, less random)
         /// </summary>
@@ -101,6 +102,7 @@ namespace Randomize
             }
         }
 
+        #region Helpers
         /// <summary>
         /// Print results to console, including calculation time
         /// </summary>
@@ -108,16 +110,9 @@ namespace Randomize
         /// <param name="took">Time taken to execute</param>
         private static void PrintOutput(int[] main, TimeSpan took)
         {
-            //StringBuilder sb = new StringBuilder(n);
-
             String result = String.Join(",", main);
 
-            //Array.ForEach(main, (m) =>
-            //{
-            //    sb.AppendLine(m.ToString());
-            //});
-
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
 
             Console.WriteLine("Calculation time: {0}s {1}ms", took.Seconds, took.Milliseconds);
         }
@@ -157,9 +152,43 @@ namespace Randomize
         /// <returns></returns>
         private static int NextMinValue(int count, int factor)
         {
-            return (count / factor) % factor == 1 ? (count / factor) : 0;            
+            return (count / factor) % factor == 1 ? (count / factor) : 0;
         }
 
-        
+        /// <summary>
+        /// Validate input formats and bind values to respective variables
+        /// </summary>
+        /// <param name="args">Console args array</param>
+        /// <returns>Valid</returns>
+        private static bool ValidateInputs(String[] args)
+        {
+            StringBuilder errors = new StringBuilder();
+
+            if (args.Length > 0)
+            {
+                if (!Int32.TryParse(args[0], out n))
+                {
+                    errors.AppendLine("Invalid amount format");
+                }
+            }
+
+            if (args.Length > 1)
+            {
+                if (args[1] != method || args[1] != "shufflepile")
+                {
+                    errors.AppendLine("Invalid method name");
+                }
+                else
+                    method = args[1];
+            }
+
+            bool valid = errors.Length > 0;
+
+            if (!valid)
+                Console.WriteLine(errors.ToString());
+
+            return valid;
+        }
+        #endregion
     }
 }
