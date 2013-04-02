@@ -171,7 +171,7 @@ namespace Randomize
         /// <returns>Valid</returns>
         private static bool ValidateInputs(String[] args)
         {
-            StringBuilder errors = new StringBuilder();
+            StringBuilder errors = new StringBuilder(0);
 
             if (args.Length > 0)
             {
@@ -191,7 +191,7 @@ namespace Randomize
                     method = args[1];
             }
 
-            bool valid = errors.Length > 0;
+            bool valid = errors.Length.Equals(0);
 
             if (!valid)
                 Console.WriteLine(errors.ToString());
