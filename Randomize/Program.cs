@@ -21,6 +21,7 @@ namespace Randomize
             if (!ValidateInputs(args))
             {
                 Console.Read();
+                return;
             }
 
             Stopwatch watch = Stopwatch.StartNew();
